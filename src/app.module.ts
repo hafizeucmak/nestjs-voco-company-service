@@ -2,10 +2,8 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Company, CompanySchema } from './schema/company.schema';
-import { CompanyController } from './controller/company.controller';
-import { CompanyService } from './service/company.service';
 import { ConfigModule } from '@nestjs/config';
+import { CompanyModule } from './module/company.module';
 
 require('dotenv').config();
 
@@ -20,10 +18,10 @@ require('dotenv').config();
       readPreference: 'secondaryPreferred'
     }),
 
-    MongooseModule.forFeature([{ name: Company.name, schema: CompanySchema }])
+    CompanyModule
   ],
-  controllers: [AppController, CompanyController],
-  providers: [AppService, CompanyService],
+  controllers: [AppController],
+  providers: [AppService]
 })
 
 export class AppModule { }

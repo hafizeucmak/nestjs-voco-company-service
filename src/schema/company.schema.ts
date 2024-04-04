@@ -4,12 +4,21 @@ import { HydratedDocument } from "mongoose";
 export type CompanyDocument = HydratedDocument<Company>;
 
 @Schema()
-export class Photos {
+export class CompanyPhoto {
     @Prop()
-    photoUrl: string;
+    companyPhotoUrl: string;
 }
 
-const photosDocumentSchema = SchemaFactory.createForClass(Photos);
+const companyPhotoDocumentSchema = SchemaFactory.createForClass(CompanyPhoto);
+
+@Schema()
+export class SocialMediaLinkUrl {
+    @Prop()
+    socialMediaLinkUrl: string;
+}
+
+const socialMediaLinkUrlDocumentSchema = SchemaFactory.createForClass(SocialMediaLinkUrl);
+
 
 @Schema()
 export class Company {
@@ -20,22 +29,31 @@ export class Company {
     @Prop()
     email: string;
     @Prop()
-    zipCode: string;
+    city: string;
+    @Prop()
+    district: string;
     @Prop()
     address: string;
     @Prop()
-    website: string;
+    zipCode: string;
     @Prop()
-    city: string;
-
+    location: string;
+    @Prop()
+    websiteUrl: string;
+    @Prop()
+    avatarUrl: string;
+    @Prop()
+    Categories: string;
+    @Prop()
+    subCategory: string;
+    @Prop({ type: [companyPhotoDocumentSchema] })
+    companyPhotos: CompanyPhoto[];
+    @Prop({ typ: [socialMediaLinkUrlDocumentSchema] })
+    socialMediaLinkUrls: SocialMediaLinkUrl[]
     @Prop({ default: null })
     deletedAt: Date | null;
-
-    @Prop({ type: [photosDocumentSchema] })
-    questions: Photos[];
-
+    @Prop({ default: () => new Date() })
     createdAt: Date;
-
     updatedAt: Date;
 }
 
