@@ -1,7 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsArray, IsEmail, IsOptional, IsEnum, IsNotEmpty, IsPhoneNumber, IsString, IsUrl, MaxLength, ValidateNested } from "class-validator";
+import { IsArray, IsEmail, IsOptional, IsEnum, IsNotEmpty, IsPhoneNumber, IsString, IsUrl, MaxLength, ValidateNested, ArrayMaxSize, ArrayMinSize } from "class-validator";
 import { CategoryEnum } from "src/enum/category.enum";
+import { LocationTypeEnum } from "src/enum/location.enum";
 
 class PhotoDto {
     @IsUrl()
@@ -19,6 +20,21 @@ class SocialMediaLinkUrlDto {
     readonly linkUrl: string;
 }
 
+export class LocationDto {
+
+    @IsEnum(LocationTypeEnum)
+    @ApiProperty({
+        enum: LocationTypeEnum,
+        enumName: 'LocationTypeEnum'
+    })
+    readonly type: LocationTypeEnum;
+
+    @IsNotEmpty()
+    @ApiProperty({ type: [Number], isArray: true })
+    @ArrayMaxSize(2)
+    @ArrayMinSize(2)
+    readonly coordinates: number[]; // [longitude, latitude]
+}
 export class CreateCompanyDto {
     @IsString()
     @MaxLength(400)
@@ -61,11 +77,6 @@ export class CreateCompanyDto {
     @IsOptional()
     @ApiPropertyOptional()
     readonly zipCode: string;
-    @IsString()
-    @MaxLength(2000)
-    @IsOptional()
-    @ApiPropertyOptional()
-    readonly location: string;
     @IsUrl()
     @IsOptional()
     @ApiPropertyOptional()
@@ -96,5 +107,10 @@ export class CreateCompanyDto {
     @Type(() => SocialMediaLinkUrlDto)
     @ApiPropertyOptional({ type: [SocialMediaLinkUrlDto] })
     readonly SocialMediaLinkUrls: SocialMediaLinkUrlDto[];
+    @IsNotEmpty()
+    @ApiProperty({ type: LocationDto })
+    @ValidateNested({ each: true })
+    @Type(() => LocationDto)
+    location: LocationDto;
 }
 

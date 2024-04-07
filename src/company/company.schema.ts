@@ -2,9 +2,17 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Query } from "mongoose";
 import { CategoryEnum } from "src/enum/category.enum";
 import { softDeletePreHook } from "src/company/hooks/soft-delete.hook";
+import { LocationTypeEnum } from "src/enum/location.enum";
 
 export type CompanyDocument = HydratedDocument<Company>;
 
+class LocationDto {
+    @Prop({ type: LocationTypeEnum })
+    type: LocationTypeEnum;
+
+    @Prop({ type: [Number] })
+    coordinates: number[]; // [longitude, latitude]
+}
 
 @Schema()
 export class Company {
@@ -24,8 +32,8 @@ export class Company {
     address: string;
     @Prop({ maxlength: 50 })
     zipCode: string;
-    @Prop({ maxlength: 2000 })
-    location: string;
+    @Prop({ type: LocationDto })
+    location: LocationDto;
     @Prop()
     websiteUrl: string;
     @Prop()
