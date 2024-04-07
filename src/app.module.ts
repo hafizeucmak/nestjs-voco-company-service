@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-import { CompanyModule } from './module/company.module';
+import { CompanyModule } from './company/company.module';
 
 require('dotenv').config();
 

@@ -1,6 +1,24 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsArray, IsEmail, IsOptional, IsEnum, IsNotEmpty, IsPhoneNumber, IsString, IsUrl, MaxLength, maxLength } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import { IsArray, IsEmail, IsOptional, IsEnum, IsNotEmpty, IsPhoneNumber, IsString, IsUrl, MaxLength, maxLength, ValidateNested, ValidationArguments } from "class-validator";
 import { CategoryEnum } from "src/enum/category.enum";
+import { Zlib } from "zlib";
+
+class Photo {
+    @IsUrl()
+    @MaxLength(200)
+    @IsNotEmpty()
+    @ApiProperty()
+    readonly url: string;
+}
+
+class SocialMediaLinkUrl {
+    @IsUrl()
+    @MaxLength(200)
+    @IsNotEmpty()
+    @ApiProperty()
+    readonly linkUrl: string;
+}
 
 export class CreateCompanyDto {
     @IsString()
@@ -57,37 +75,28 @@ export class CreateCompanyDto {
     @IsOptional()
     @ApiPropertyOptional()
     readonly avatarUrl: string;
-    @IsOptional()
-    @ApiPropertyOptional()
     @IsEnum(CategoryEnum)
-    readonly Category: CategoryEnum;
+    @IsOptional()
+    @ApiPropertyOptional({
+        enum: CategoryEnum,
+        enumName: 'CategoryEnum'
+    })
+    readonly Category?: CategoryEnum | undefined ;
     @IsString()
     @IsOptional()
     @ApiPropertyOptional()
     readonly subCategory: string;
     @IsArray()
-    @MaxLength(500)
     @IsOptional()
-    @ApiPropertyOptional()
-    readonly companyPhotos: CompanyPhotoDto[];
+    @ValidateNested({ each: true })
+    @Type(() => Photo)
+    @ApiPropertyOptional({ type: [Photo], description: 'List of company photos' })
+    readonly photos: Photo[];
     @IsArray()
     @IsOptional()
-    @ApiPropertyOptional()
-    readonly socialMediaLinkUrls: SocialMediaLinkUrlDto[];
+    @ValidateNested({ each: true })
+    @Type(() => SocialMediaLinkUrl)
+    @ApiPropertyOptional({ type: [SocialMediaLinkUrl], description: 'List of company social media lik urls' })
+    readonly SocialMediaLinkUrls: SocialMediaLinkUrl[];
 }
 
-export class CompanyPhotoDto {
-    @IsUrl()
-    @MaxLength(200)
-    @IsNotEmpty()
-    @ApiProperty()
-    readonly companyPhotoUrl: string;
-}
-
-export class SocialMediaLinkUrlDto {
-    @IsUrl()
-    @MaxLength(200)
-    @IsNotEmpty()
-    @ApiProperty()
-    socialMediaLinkUrl: string;
-}
