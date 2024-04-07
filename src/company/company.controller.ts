@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpStatus, Param, Patch, Post, Req, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Req, Res } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { CompanyService } from "src/company/company.service";
 import { CreateCompanyDto } from "./dto/create-company.dto";
@@ -16,13 +16,17 @@ export class CompanyController {
     }
 
     @Patch('updateCompany/:companyId')
-    async updateCompany(@Param() id: any, @Body() company: UpdateCompanyDto) {
-        const companyId = id.companyId
+    async updateCompany(@Param('companyId') companyId: any, @Body() company: UpdateCompanyDto) {
         return await this.companyService.updateCompany(companyId, company);
     }
 
     @Delete('deleteCompany/:companyId')
-    async deleteCompany(@Param('companyId') companyId: string) : Promise<CompanyDocument> {
+    async deleteCompany(@Param('companyId') companyId: string) {
         return await this.companyService.deleteCompany(companyId);
+    }
+
+    @Get('findCompanyById/:companyId')
+    async findCompanyById(@Param('companyId') companyId: string) {
+        return await this.companyService.findCompanyById(companyId);
     }
 }

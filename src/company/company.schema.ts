@@ -1,8 +1,11 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import { HydratedDocument, Query } from "mongoose";
 import { CategoryEnum } from "src/enum/category.enum";
+import { softDeletePreHook } from "src/company/hooks/soft-delete.hook";
 
 export type CompanyDocument = HydratedDocument<Company>;
+
+
 @Schema()
 export class Company {
     @Prop({ required: true, maxlength: 400 })
@@ -12,7 +15,7 @@ export class Company {
     @Prop({ required: true, maxlength: 100 })
     email: string;
     @Prop({ required: true })
-    phone : string;
+    phone: string;
     @Prop({ maxlength: 100 })
     city: string;
     @Prop({ maxlength: 100 })
@@ -31,20 +34,20 @@ export class Company {
     category: CategoryEnum;
     @Prop()
     subCategory: string;
-    @Prop({ 
-        type: [{ 
-            url: {type : String, required : true}, 
+    @Prop({
+        type: [{
+            url: { type: String, required: true },
             createdAt: { type: Date, default: Date.now }
-        }], 
-        default: [] 
+        }],
+        default: []
     })
     photos: { url: string, createdAt: Date }[];
-    @Prop({ 
-        type: [{ 
-            linkUrl: {type : String, required : true}, 
+    @Prop({
+        type: [{
+            linkUrl: { type: String, required: true },
             createdAt: { type: Date, default: Date.now }
-        }], 
-        default: [] 
+        }],
+        default: []
     })
     socialMediaLinkUrls: { linkUrl: string, createdAt: Date }[];
     @Prop({ default: null })
@@ -55,3 +58,5 @@ export class Company {
 }
 
 export const CompanySchema = SchemaFactory.createForClass(Company);
+
+softDeletePreHook(CompanySchema);

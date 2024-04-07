@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { CompanyModule } from './company/company.module';
+import { CompanyVocoModule } from './company-voco/companyVoco.module';
 
 require('dotenv').config();
 
@@ -18,7 +19,8 @@ require('dotenv').config();
       readPreference: 'secondaryPreferred'
     }),
 
-    CompanyModule
+    CompanyModule,
+    CompanyVocoModule
   ],
   controllers: [AppController],
   providers: [AppService]

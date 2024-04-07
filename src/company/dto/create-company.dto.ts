@@ -1,10 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Transform, Type } from "class-transformer";
-import { IsArray, IsEmail, IsOptional, IsEnum, IsNotEmpty, IsPhoneNumber, IsString, IsUrl, MaxLength, maxLength, ValidateNested, ValidationArguments } from "class-validator";
+import { Type } from "class-transformer";
+import { IsArray, IsEmail, IsOptional, IsEnum, IsNotEmpty, IsPhoneNumber, IsString, IsUrl, MaxLength, ValidateNested } from "class-validator";
 import { CategoryEnum } from "src/enum/category.enum";
-import { Zlib } from "zlib";
 
-class Photo {
+class PhotoDto {
     @IsUrl()
     @MaxLength(200)
     @IsNotEmpty()
@@ -12,7 +11,7 @@ class Photo {
     readonly url: string;
 }
 
-class SocialMediaLinkUrl {
+class SocialMediaLinkUrlDto {
     @IsUrl()
     @MaxLength(200)
     @IsNotEmpty()
@@ -76,12 +75,11 @@ export class CreateCompanyDto {
     @ApiPropertyOptional()
     readonly avatarUrl: string;
     @IsEnum(CategoryEnum)
-    @IsOptional()
-    @ApiPropertyOptional({
+    @ApiProperty({
         enum: CategoryEnum,
         enumName: 'CategoryEnum'
     })
-    readonly Category?: CategoryEnum | undefined ;
+    readonly category: CategoryEnum;
     @IsString()
     @IsOptional()
     @ApiPropertyOptional()
@@ -89,14 +87,14 @@ export class CreateCompanyDto {
     @IsArray()
     @IsOptional()
     @ValidateNested({ each: true })
-    @Type(() => Photo)
-    @ApiPropertyOptional({ type: [Photo], description: 'List of company photos' })
-    readonly photos: Photo[];
+    @Type(() => PhotoDto)
+    @ApiPropertyOptional({ type: [PhotoDto]})
+    readonly photos: PhotoDto[];
     @IsArray()
     @IsOptional()
     @ValidateNested({ each: true })
-    @Type(() => SocialMediaLinkUrl)
-    @ApiPropertyOptional({ type: [SocialMediaLinkUrl], description: 'List of company social media lik urls' })
-    readonly SocialMediaLinkUrls: SocialMediaLinkUrl[];
+    @Type(() => SocialMediaLinkUrlDto)
+    @ApiPropertyOptional({ type: [SocialMediaLinkUrlDto] })
+    readonly SocialMediaLinkUrls: SocialMediaLinkUrlDto[];
 }
 

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Get, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Company, CompanyDocument } from "./company.schema";
@@ -23,5 +23,12 @@ export class CompanyService {
     async deleteCompany(id: string) {
         const company = await this.companyModel.findById(id);
         return await company.updateOne({ deletedAt: new Date() });
+    }
+
+    async findCompanyById(companyId: string) {
+        var company = await this.companyModel.findById(companyId);
+        if (company === null)
+            throw new NotFoundException("Company not found with given Id");
+        return company;
     }
 }
