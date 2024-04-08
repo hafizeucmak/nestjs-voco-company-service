@@ -1,9 +1,11 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import { HydratedDocument, Types } from "mongoose";
+import { CompanyDocument } from "src/company/company.schema";
 import { TargetGenderEnum } from "src/enum/gender.enum";
 import { LocationTypeEnum } from "src/enum/location.enum";
+import { softDeletePreHook } from "./hooks/soft-delete.hook";
 
-export type CompanyDocument = HydratedDocument<CompanyVoco>;
+export type CompanyVocoDocument = HydratedDocument<CompanyVoco>;
 
 class Content {
     tr: string;
@@ -34,6 +36,12 @@ export class CompanyVoco {
     @Prop()
     city: string;
 
+    @Prop({ required: true, type: Types.ObjectId, ref: 'Company' })
+    company: CompanyDocument;
+
+    @Prop({ type: Types.ObjectId, ref: 'Company' })
+    companyId: Types.ObjectId; 
+
     @Prop()
     district: string;
 
@@ -43,7 +51,7 @@ export class CompanyVoco {
     // @Prop() TODO:// learn target age
     // targetAge: string;
 
-    // @Prop() TODO:// learn target age
+    // @Prop() TODO:// learn status
     // status: string;
 
     @Prop({ type: LocationDto })
@@ -59,5 +67,5 @@ export class CompanyVoco {
     updatedAt: Date | null;
 }
 
-
 export const CompanyVocoSchema = SchemaFactory.createForClass(CompanyVoco);
+softDeletePreHook(CompanyVocoSchema);

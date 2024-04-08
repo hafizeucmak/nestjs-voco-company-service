@@ -7,12 +7,12 @@ import { CompanyService } from "./company.service";
 @Module({
     imports: [
         MongooseModule.forFeature([
-            { name: Company.name, schema: CompanySchema },
+            { name: Company.name, schema: CompanySchema }
         ])
     ],
     controllers: [CompanyController],
     providers: [CompanyService],
-    exports: []
+    exports: [CompanyService]
 })
 
 export class CompanyModule { }

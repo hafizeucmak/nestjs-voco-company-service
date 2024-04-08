@@ -3,7 +3,6 @@ import { ApiTags } from "@nestjs/swagger";
 import { CompanyService } from "src/company/company.service";
 import { CreateCompanyDto } from "./dto/create-company.dto";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
-import { CompanyDocument } from "./company.schema";
 
 @ApiTags('Company')
 @Controller('company')

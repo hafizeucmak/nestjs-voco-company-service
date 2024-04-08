@@ -46,12 +46,12 @@ export class CreateCompanyVocoDto {
     @ApiProperty()
     @IsArray()
     @ValidateNested({ each: true })
-    @ApiProperty({ type: ContentDto })
+    @ApiProperty({ type: [ContentDto] })
     @Type(() => ContentDto)
     contents: ContentDto[];
 
     @IsNotEmpty()
-    @ApiProperty({ type: HeadingDto })
+    @ApiProperty({ type: [HeadingDto] })
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => HeadingDto)
