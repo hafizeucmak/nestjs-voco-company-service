@@ -5,6 +5,7 @@ import { CompanyVoco, CompanyVocoDocument } from "./CompanyVoco.schema";
 import { CreateCompanyVocoDto } from "./dto/create-company-voco.dto";
 import { UpdateCompanyVocoDto } from "./dto/update-company-voco.dto";
 import { Company, CompanyDocument } from "src/company/company.schema";
+import { ASCENDING, DESCENDING } from "src/constant/param.constant";
 
 @Injectable()
 export class CompanyVocoService {
@@ -49,7 +50,26 @@ export class CompanyVocoService {
         return companyVocos;
     }
 
-    async findAllCompanyVocos() {
-        return await this.companyVocoModel.find();
+    async findAllCompanyVocos(query) {
+        const { page = 1, itemsPerPage = 10} = query;
+        const skip = (page - 1) * itemsPerPage;
+
+        return await this.companyVocoModel.find().skip(skip).limit(itemsPerPage).sort({ createdAt: ASCENDING }).exec();
+    }
+
+
+    async searchCompanyVocos(query) {
+
+        const { page = 1, itemsPerPage = 10, searchTerm = "" } = query;
+        const skip = (page - 1) * itemsPerPage;
+
+        const companyVocos = await this.companyVocoModel.find({
+            'contents.tr': { $regex: `.*${searchTerm}.*`, $options: 'i' }
+        }).skip(skip).limit(itemsPerPage).sort({ createdAt: DESCENDING }).exec();
+
+        if (!companyVocos)
+            throw new NotFoundException("Couldn't find anything.");
+
+        return companyVocos;
     }
 }
